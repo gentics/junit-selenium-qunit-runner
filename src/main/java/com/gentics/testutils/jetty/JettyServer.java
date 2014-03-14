@@ -1,6 +1,8 @@
 package com.gentics.testutils.jetty;
 
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
@@ -26,7 +28,34 @@ public class JettyServer {
 		} catch (Exception ignored) {
 		}
 		//TODO make port dynamic
-		port = Integer.parseInt(System.getProperty("jetty.port", "8881"));
+		port = Integer.parseInt(System.getProperty("jetty.port", String.valueOf(getRandomPort())));
+	}
+
+	/**
+	 * Not the most elegant or efficient solution, but works.
+	 * 
+	 * @param port
+	 * @return
+	 */
+	private int getRandomPort() {
+		ServerSocket socket = null;
+
+		try {
+			socket = new ServerSocket(0);
+			return socket.getLocalPort();
+		} catch (IOException ioe) {
+			return -1;
+		} finally {
+			// if we did open it cause it's available, close it
+			if (socket != null) {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					// ignore
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	/**
@@ -36,7 +65,7 @@ public class JettyServer {
 	 */
 	public void start() throws Exception {
 
-		server = new Server(8881);
+		server = new Server(port);
 
 		ResourceHandler resource_handler = new ResourceHandler();
 		resource_handler.setDirectoriesListed(true);
