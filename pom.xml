@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gentics</groupId>
 	<artifactId>junit-selenium-qunit-runner</artifactId>
-	<version>0.9.1</version>
+	<version>0.9.2</version>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -29,12 +29,12 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>2.40.0</version>
+			<version>2.42.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-ie-driver</artifactId>
-			<version>2.40.0</version>
+			<version>2.42.2</version>
 		</dependency>
 
 		<!-- Test dependencies -->
