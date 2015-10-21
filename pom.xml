@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.gentics</groupId>
 	<artifactId>junit-selenium-qunit-runner</artifactId>
-	<version>0.9.2</version>
+	<version>0.9.3</version>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -102,14 +102,14 @@
 
 	<distributionManagement>
 		<repository>
-			<id>archiva.lan.releases</id>
+			<id>artifactory.lan.releases</id>
 			<name>Gentics Releases Repository</name>
-			<url>http://archiva.office/repository/releases</url>
+			<url>http://artifactory.office/repository/lan.releases</url>
 		</repository>
 		<snapshotRepository>
-			<id>archiva.lan.snapshots</id>
+			<id>artifactory.lan.snapshots</id>
 			<name>Gentics Snapshots Repository</name>
-			<url>http://archiva.office/repository/snapshots</url>
+			<url>http://artifactory.office/repository/lan.releases</url>
 		</snapshotRepository>
 	</distributionManagement>
 </project>
