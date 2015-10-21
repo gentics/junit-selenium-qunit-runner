@@ -86,7 +86,7 @@ public class SeleniumRunner {
 	}
 
 	public void stop() throws Exception {
-		driver.close();
+		driver.quit();
 		server.stop();
 	}
 
