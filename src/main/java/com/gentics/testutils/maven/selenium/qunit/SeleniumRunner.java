@@ -66,10 +66,14 @@ public class SeleniumRunner {
 				driver = new InternetExplorerDriver();
 			} else if (browser.equals("firefox")) {
 				FirefoxProfile profile = new FirefoxProfile();
-				return new FirefoxDriver(profile);
+				driver = new FirefoxDriver(profile);
 			}
 
-			throw new Exception("No supported browser specified in Property-File");
+			if (driver == null) {
+				throw new Exception("No supported browser specified in Property-File");
+			}
+
+			return driver;
 		}
 	}
 
