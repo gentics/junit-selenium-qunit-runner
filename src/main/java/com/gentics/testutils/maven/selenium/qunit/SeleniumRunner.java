@@ -1,6 +1,10 @@
 package com.gentics.testutils.maven.selenium.qunit;
 
+import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -77,7 +81,7 @@ public class SeleniumRunner {
 		}
 	}
 
-	public void start() throws Exception  {
+	public void start() throws Exception {
 		driver = configureWebDriver(true);
 		server = new JettyServer();
 		server.start();
@@ -85,8 +89,51 @@ public class SeleniumRunner {
 
 	public void runTest() throws QUnitException, UnknownHostException {
 		String basePath = settings.getProperty("basePath");
-		QUnitSeleniumRunner runner = new QUnitSeleniumRunner(driver, "http://" + InetAddress.getLocalHost().getHostName() + ":" + server.getPort()	+ basePath, module);
+
+		QUnitSeleniumRunner runner = new QUnitSeleniumRunner(driver, "http://" + getLanWebServerIp() + ":" + server.getPort() + basePath, module);
 		runner.executeTest();
+	}
+
+	/**
+	 * Get the IP address of the LAN adapter that talks with the selenium Hub
+	 * and node
+	 * 
+	 * @return IP address
+	 * @throws QUnitException
+	 */
+	protected String getLanWebServerIp() throws QUnitException {
+		String webserverIp = null;
+
+		try {
+			String seleniumHost = new URL(settings.getProperty("hub_location")).getHost();
+			webserverIp = getLocalIpForRoutedRemoteIP(seleniumHost);
+		} catch (SocketException | MalformedURLException | UnknownHostException e) {
+			throw new QUnitException("Couldn't find out the local LAN IP for communication with the selenium hub/node");
+		}
+
+		return webserverIp;
+	}
+
+	/**
+	 * Returns the IP of the network interface that is used to communicate with
+	 * the given remote host/IP. Let's say we want to reach 8.8.8.8, it would
+	 * return the IP of the local network adapter that is routed into the
+	 * Internet.
+	 * 
+	 * @param destination
+	 *            The remote host name or IP
+	 * @return An IP of a local network adapter
+	 * @throws UnknownHostException
+	 * @throws SocketException
+	 */
+	protected String getLocalIpForRoutedRemoteIP(String destination) throws UnknownHostException, SocketException {
+		byte[] ipBytes = InetAddress.getByName(destination).getAddress();
+
+		try (DatagramSocket datagramSocket = new DatagramSocket()) {
+			datagramSocket.connect(InetAddress.getByAddress(ipBytes), 0);
+
+			return datagramSocket.getLocalAddress().getHostAddress();
+		}
 	}
 
 	public void stop() throws Exception {
